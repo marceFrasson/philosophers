@@ -6,7 +6,7 @@
 /*   By: mfrasson <mfrasson@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 12:12:07 by mfrasson          #+#    #+#             */
-/*   Updated: 2022/09/21 20:11:34 by mfrasson         ###   ########.fr       */
+/*   Updated: 2022/09/21 23:26:14 by mfrasson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,35 +50,24 @@ void   attribute_arguments_values(char **argv, t_table *table)
     table->start = 0;
 }
 
-static void	*instructions(void *args)
+static int	alocate_memory(t_table *table)
 {
-	t_philosopher *philosopher;
+	int	i;
 
-    philosopher = (t_philosopher*)args;
-    printf("philosopher %d eats\n", philosopher->index);
-    sleep(philosopher->table->time_to_eat);
-    printf("philosopher %d sleeps\n", philosopher->index);
-    sleep(philosopher->table->time_to_sleep);
-    printf("philosopher %d thinks\n", philosopher->index);
-    sleep(philosopher->table->time_to_eat - philosopher->table->time_to_sleep + 1);
-	return (NULL);
+	table->forks = NULL;
+	table->philosophers = malloc(table->number_of_philosophers * sizeof(t_philosopher));
+	if (!table->philosophers)
+		return (1);
+    table->forks = malloc(table->number_of_philosophers * sizeof(pthread_mutex_t));
+	if (!table->forks)
+		return (1);
+	return (0);
 }
 
-int	start_threading(t_table *table)
+void    free_memory(t_table *table)
 {
-	int			i;
-
-	table->start = current_time();
-	i = -1;
-	while (++i < table->number_of_philosophers)
-		if (pthread_create(&(table->philosophers + i)->thread, NULL, &instructions,
-				table->philosophers + i))
-			return (1);
-	i = -1;
-	while (++i < table->number_of_philosophers)
-		if (pthread_join((table->philosophers)->thread, NULL))
-			return (2);
-	return (0);
+    free(table->philosophers);
+    free(table->forks);
 }
 
 static void	create_philosopher(t_table *table)
@@ -98,24 +87,79 @@ static void	create_philosopher(t_table *table)
 	philosopher->right_fork = table->forks;
 }
 
-static int	alocate_memory(t_table *table)
+void    print(t_philosopher *philosopher, int function)
 {
-	int	i;
+    if (function == LEFT)
+        printf("%d took the left fork\n", philosopher->index);
+    else if (function == RIGHT)
+        printf("%d took the right fork\n", philosopher->index);
+    else if (function == EAT)
+        printf("%d is eating\n", philosopher->index);
+    else if (function == SLEEP)
+        printf("%d is sleeping\n", philosopher->index);
+    else if (function == THINK)
+        printf("%d is thinking\n", philosopher->index);
+    else if (function == DEAD)
+    {
+        printf("%d died\n", philosopher->index);
+        philosopher->table->deaths = 1;
+    }
+}
 
-	table->forks = NULL;
-	table->philosophers = malloc(table->number_of_philosophers * sizeof(t_philosopher));
-	if (!table->philosophers)
-		return (1);
-    table->forks = malloc(table->number_of_philosophers * sizeof(pthread_mutex_t));
-	if (!table->forks)
-		return (1);
+static void    *mutex(void *args)
+{
+    t_philosopher *philosopher;
+
+    philosopher = (t_philosopher*)args;
+
+    pthread_mutex_lock(philosopher->left_fork);
+    print(philosopher, LEFT);
+    pthread_mutex_lock(philosopher->right_fork);
+    print(philosopher, RIGHT);
+    
+    print(philosopher, EAT);
+    sleep(philosopher->table->time_to_eat);
+    philosopher->last_eat = current_time();
+    philosopher->times_eaten++;
+    
+    pthread_mutex_unlock(philosopher->left_fork);
+    pthread_mutex_unlock(philosopher->right_fork);
+    
+    print(philosopher, SLEEP);
+    sleep(philosopher->table->time_to_sleep);
+    
+    print(philosopher, THINK);
+
+    return (NULL);
+}
+
+int	start_threading(t_table *table)
+{
+	int			i;
+
+	table->start = current_time();
+	i = -1;
+	while (++i < table->number_of_philosophers)
+		if (pthread_create(&(table->philosophers + i)->thread, NULL, &mutex,
+				table->philosophers + i))
+			return (1);
+	i = -1;
+	while (++i < table->number_of_philosophers)
+		if (pthread_join((table->philosophers)->thread, NULL))
+			return (2);
 	return (0);
 }
 
-void    free_memory(t_table *table)
+void    time_to_die(t_table *table)
 {
-    free(table->philosophers);
-    free(table->forks);
+    int i;
+    
+    i = -1;
+    while (++i < table->number_of_philosophers)
+        if (table->time_to_die < current_time() -
+            (table->philosophers + i)->last_eat)
+            mutex(table->philosophers + i);
+    
 }
 
 int main(int argc, char **argv)
@@ -143,3 +187,25 @@ int main(int argc, char **argv)
 }
 
 //criar função que print ele dormindo depois comendo e pensando efaz as threads rodarem esse cara
+
+/*
+
+mutex_init
+
+wait x thinking time
+mutex_lock left fork
+mutex_lock right fork
+    print eating
+wait x eating time
+mutex_unlock left fork
+mutex_unlock right fork
+wait x sleeping time
+
+pthread_create
+pthread_exit
+
+mutex_destroy
+
+pthread_exit
+
+*/

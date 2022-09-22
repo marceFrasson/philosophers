@@ -6,7 +6,7 @@
 /*   By: mfrasson <mfrasson@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 12:12:07 by mfrasson          #+#    #+#             */
-/*   Updated: 2022/09/21 19:48:34 by mfrasson         ###   ########.fr       */
+/*   Updated: 2022/09/21 23:25:01 by mfrasson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,13 @@
 # include <pthread.h>
 # include <stddef.h>
 
+# define LEFT   0
+# define RIGHT  1
+# define EAT    2
+# define SLEEP  3
+# define THINK  4
+# define DEAD   5
+
 typedef struct s_table	t_table;
 
 typedef struct s_philosopher
@@ -29,6 +36,8 @@ typedef struct s_philosopher
     pthread_t       thread;
     pthread_mutex_t *left_fork;
     pthread_mutex_t *right_fork;
+    int             last_eat;
+    int             times_eaten;
 }               t_philosopher;
 
 typedef struct s_table
@@ -38,6 +47,7 @@ typedef struct s_table
     int             time_to_eat;
     int             time_to_sleep;
     int             times_a_philosopher_must_eat;
+    int             deaths;
     long int        start;
     t_philosopher   *philosophers;
     pthread_mutex_t	*forks;
