@@ -6,7 +6,7 @@
 /*   By: mfrasson <mfrasson@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 12:12:07 by mfrasson          #+#    #+#             */
-/*   Updated: 2022/09/21 23:25:01 by mfrasson         ###   ########.fr       */
+/*   Updated: 2022/09/28 14:53:21 by mfrasson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,36 +20,41 @@
 # include <pthread.h>
 # include <stddef.h>
 
-# define LEFT   0
-# define RIGHT  1
-# define EAT    2
-# define SLEEP  3
-# define THINK  4
-# define DEAD   5
+# define false  0
+# define true   1
+
+# define END    1
+
+# define FORK   0
+# define EAT    1
+# define SLEEP  2
+# define THINK  3
+# define DEAD   4
 
 typedef struct s_table	t_table;
 
-typedef struct s_philosopher
+typedef struct s_philo
 {
     int             index;
     t_table         *table;
     pthread_t       thread;
     pthread_mutex_t *left_fork;
     pthread_mutex_t *right_fork;
-    int             last_eat;
+    long int        last_meal;
     int             times_eaten;
-}               t_philosopher;
+}               t_philo;
 
 typedef struct s_table
 {
-    int             number_of_philosophers;
+    int             number_of_philos;
     int             time_to_die;
     int             time_to_eat;
     int             time_to_sleep;
-    int             times_a_philosopher_must_eat;
+    int             times_a_philo_must_eat;
     int             deaths;
     long int        start;
-    t_philosopher   *philosophers;
+    int             stop;
+    t_philo         *philos;
     pthread_mutex_t	*forks;
 	pthread_mutex_t	print;
 }               t_table;

@@ -6,24 +6,24 @@
 #    By: mfrasson <mfrasson@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/31 18:38:37 by mfrasson          #+#    #+#              #
-#    Updated: 2022/09/21 18:41:16 by mfrasson         ###   ########.fr        #
+#    Updated: 2022/11/01 02:22:02 by mfrasson         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRC_DIR	=	./source
-SRC			=	philosophers.c \
+SRC			=	philo.c \
 					utils.c
 
 OBJ_DIR	=	./builds
 OBJ			=	$(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))
 
 INCD_DIR	=	./includes
-INCD			=	philosophers.h
+INCD			=	philo.h
 
 vpath %.c $(SRC_DIR)
 vpath %.h $(INCD_DIR)
 
-NAME	=	philosophers
+NAME	=	philo
 
 # CFLAGS	=	-Wall -Wextra -Werror -g3 -fsanitize=address
 
@@ -62,9 +62,4 @@ fclean:		clean
 
 re:			fclean all
 
-git:
-	@git add .
-	@git status
-	@git commit -m "$m"
-
-.PHONY:		all clean fclean re git
+.PHONY:		all clean fclean re
