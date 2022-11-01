@@ -6,7 +6,7 @@
 /*   By: mfrasson <mfrasson@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 12:12:07 by mfrasson          #+#    #+#             */
-/*   Updated: 2022/11/01 02:09:55 by mfrasson         ###   ########.fr       */
+/*   Updated: 2022/11/01 04:34:20 by mfrasson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,42 @@ int	ft_atoi(const char *str)
 		i++;
 	}
 	return (sinal * num);
+}
+
+long int	current_time(void)
+{
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
+}
+
+void	sleep_ms(int time)
+{
+	usleep(time * 1000);
+}
+
+void	print(t_philo *philo, int action)
+{
+	if (!philo->table->deaths)
+	{
+		if (action == FORK)
+			printf("\033[0;34m%ld %d has taken a fork\n", current_time()
+				- philo->table->start, philo->index);
+		else if (action == EAT)
+			printf("\033[0;36m%ld %d is eating\n", current_time()
+				- philo->table->start, philo->index);
+		else if (action == SLEEP)
+			printf("\033[0;35m%ld %d is sleeping\n", current_time()
+				- philo->table->start, philo->index);
+		else if (action == THINK)
+			printf("\033[0;37m%ld %d is thinking\n", current_time()
+				- philo->table->start, philo->index);
+		else if (action == DEAD)
+		{
+			printf("\033[0;31m%ld %d died\n", current_time()
+				- philo->table->start, philo->index);
+			philo->table->deaths++;
+		}
+	}
 }

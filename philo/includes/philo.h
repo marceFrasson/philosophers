@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosophers.h                                     :+:      :+:    :+:   */
+/*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mfrasson <mfrasson@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 12:12:07 by mfrasson          #+#    #+#             */
-/*   Updated: 2022/09/28 14:53:21 by mfrasson         ###   ########.fr       */
+/*   Updated: 2022/11/01 04:31:40 by mfrasson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILOSOPHERS_H
-# define PHILOSOPHERS_H
+#ifndef PHILO_H
+# define PHILO_H
 
 # include <unistd.h>
 # include <stdlib.h>
@@ -20,10 +20,7 @@
 # include <pthread.h>
 # include <stddef.h>
 
-# define false  0
-# define true   1
-
-# define END    1
+# define TRUE   1
 
 # define FORK   0
 # define EAT    1
@@ -35,40 +32,59 @@ typedef struct s_table	t_table;
 
 typedef struct s_philo
 {
-    int             index;
-    t_table         *table;
-    pthread_t       thread;
-    pthread_mutex_t *left_fork;
-    pthread_mutex_t *right_fork;
-    long int        last_meal;
-    int             times_eaten;
-}               t_philo;
+	int				index;
+	t_table			*table;
+	pthread_t		thread;
+	pthread_mutex_t	*left_fork;
+	pthread_mutex_t	*right_fork;
+	long int		last_meal;
+	int				times_eaten;
+}					t_philo;
 
 typedef struct s_table
 {
-    int             number_of_philos;
-    int             time_to_die;
-    int             time_to_eat;
-    int             time_to_sleep;
-    int             times_a_philo_must_eat;
-    int             deaths;
-    long int        start;
-    int             stop;
-    t_philo         *philos;
-    pthread_mutex_t	*forks;
-	pthread_mutex_t	print;
-}               t_table;
+	int				number_of_philos;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				times_a_philo_must_eat;
+	int				deaths;
+	long int		start;
+	int				stop;
+	t_philo			*philos;
+	pthread_mutex_t	*forks;
+}					t_table;
+
+/*
+**  actions.c
+*/
+
+void		take_forks(t_philo *philo);
+void		eat(t_philo *philo);
+void		drop_forks(t_philo *philo);
+void		sleep(t_philo *philo);
+void		think(t_philo *philo);
+
+/*
+**  start_simulation.c
+*/
+
+void		create_philo(t_table *table);
+int			start_simulation(t_table *table);
+
+/*
+**    end_simulation.c
+*/
+
+void		*continue_or_end(void *args);
 
 /*
 **    utils.c
 */
 
-int	ft_atoi(const char *str);
-
-/*
-**    philosophers.c
-*/
-
-
+int			ft_atoi(const char *str);
+long int	current_time(void);
+void		sleep_ms(int time);
+void		print(t_philo *philo, int action);
 
 #endif
