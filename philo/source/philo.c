@@ -6,7 +6,7 @@
 /*   By: mfrasson <mfrasson@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 12:12:07 by mfrasson          #+#    #+#             */
-/*   Updated: 2022/11/01 04:20:17 by mfrasson         ###   ########.fr       */
+/*   Updated: 2022/11/01 23:27:08 by mfrasson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,19 @@
 
 static void	free_memory(t_table *table)
 {
+	// int	i;
+
+	// i = -1;
+	// while (++i < table->number_of_philos && table->forks)
+	// 	pthread_mutex_destroy(table->forks + i);
+	// pthread_mutex_destroy(table->print);
+	// pthread_mutex_destroy(table->die);
+	// pthread_mutex_destroy(table->eat);
 	free(table->philos);
 	free(table->forks);
+	// free(table->print);
+	// free(table->die);
+	// free(table->eat);
 }
 
 static int	alocate_memory(t_table *table)
@@ -28,6 +39,14 @@ static int	alocate_memory(t_table *table)
 	table->forks = malloc(table->number_of_philos
 			* sizeof(pthread_mutex_t));
 	if (!table->forks)
+		return (1);
+	table->print = malloc(table->number_of_philos
+			* sizeof(pthread_mutex_t));
+	if (!table->print)
+		return (1);
+	table->die = malloc(table->number_of_philos
+			* sizeof(pthread_mutex_t));
+	if (!table->die)
 		return (1);
 	return (0);
 }
@@ -44,6 +63,7 @@ static void	attribute_arguments_values(char **argv, t_table *table)
 		table->times_a_philo_must_eat = -1;
 	table->start = 0;
 	table->stop = 0;
+	table->deaths = 0;
 }
 
 static int	check_number_of_arguments(int argc)
@@ -74,6 +94,7 @@ int	main(int argc, char **argv)
 		free_memory(&table);
 		return (1);
 	}
+	init_mutexes(&table);
 	create_philo(&table);
 	start_simulation(&table);
 	free_memory(&table);

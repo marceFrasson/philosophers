@@ -6,7 +6,7 @@
 /*   By: mfrasson <mfrasson@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 12:12:07 by mfrasson          #+#    #+#             */
-/*   Updated: 2022/11/01 04:30:16 by mfrasson         ###   ########.fr       */
+/*   Updated: 2022/11/01 23:15:22 by mfrasson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	drop_forks(t_philo *philo)
 	pthread_mutex_unlock(philo->right_fork);
 }
 
-void	sleep(t_philo *philo)
+void	take_a_nap(t_philo *philo)
 {
 	print(philo, SLEEP);
 	sleep_ms(philo->table->time_to_sleep);

@@ -6,7 +6,7 @@
 /*   By: mfrasson <mfrasson@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 12:12:07 by mfrasson          #+#    #+#             */
-/*   Updated: 2022/11/01 04:16:56 by mfrasson         ###   ########.fr       */
+/*   Updated: 2022/11/01 23:27:26 by mfrasson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static int	time_to_stop(t_table *table)
 {
 	t_philo	philo;
-	int		i;
+	int			i;
 
 	i = -1;
 	while (++i < table->number_of_philos)
@@ -33,16 +33,18 @@ static int	time_to_stop(t_table *table)
 
 static int	time_to_die(t_table *table)
 {
-	t_philo	philo;
-	int		i;
+	t_philo	*philo;
+	int			i;
 
 	i = -1;
 	while (++i < table->number_of_philos)
 	{
-		philo = table->philos[i];
-		if (current_time() - philo.last_meal > philo.table->time_to_die)
+		philo = table->philos + i;
+		if (current_time() - philo->last_meal > philo->table->time_to_die)
 		{
-			print(&philo, DEAD);
+			pthread_mutex_lock(table->die);
+			print(philo, DEAD);
+			pthread_mutex_unlock(table->die);
 			return (1);
 		}
 	}
@@ -54,7 +56,7 @@ void	*continue_or_end(void *args)
 	t_table	*table;
 
 	table = (t_table *)args;
-	while (TRUE)
+	while (true)
 	{
 		sleep_ms(1);
 		if (time_to_die(table))

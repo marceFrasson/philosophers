@@ -6,12 +6,15 @@
 #    By: mfrasson <mfrasson@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/31 18:38:37 by mfrasson          #+#    #+#              #
-#    Updated: 2022/11/01 02:38:31 by mfrasson         ###   ########.fr        #
+#    Updated: 2022/11/01 22:35:08 by mfrasson         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRC_DIR	=	./source
-SRC			=	philo.c \
+SRC			=	actions.c \
+					end_simulation.c \
+					philo.c \
+					start_simulation.c \
 					utils.c
 
 OBJ_DIR	=	./builds
@@ -25,7 +28,9 @@ vpath %.h $(INCD_DIR)
 
 NAME	=	philo
 
-CFLAGS	=	-Wall -Wextra -Werror -g3
+CFLAGS	=	-Wall -Wextra -Werror -g3 
+
+#-fsanitize=thread
 
 FLAGS	=	-pthread
 
@@ -36,7 +41,7 @@ CC		=	clang
 all:			$(NAME)
 
 $(NAME):	$(OBJ)
-	@$(CC) $(CFLAGS) $(FLAGS)$(OBJ) -I $(INCD_DIR) -o $(NAME)
+	@ $(VALGRIND) $(CC) $(CFLAGS) $(FLAGS)$(OBJ) -I $(INCD_DIR) -o $(NAME)
 
 	@echo ""
 	@echo ""
