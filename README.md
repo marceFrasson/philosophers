@@ -22,6 +22,7 @@ a philosopher dies of starvation.
 * No need to say that philosophers should avoid dying!
 * Every philosopher is a thread.
 * Forks should be protected by mutexes.
+* Your program must not have any data races.
 
 ### content learned
 
