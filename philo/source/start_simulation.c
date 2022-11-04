@@ -6,7 +6,7 @@
 /*   By: mfrasson <mfrasson@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 12:12:07 by mfrasson          #+#    #+#             */
-/*   Updated: 2022/11/04 01:13:55 by mfrasson         ###   ########.fr       */
+/*   Updated: 2022/11/04 01:53:36 by mfrasson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ void	init_mutexes(t_table *table)
 void	create_philo(t_table *table)
 {
 	t_philo	*philo;
-	int			i;
+	int		i;
 
 	i = -1;
 	while (++i < table->number_of_philos)
 	{
 		philo = table->philos + i;
-		philo->index = i;
+		philo->index = i + 1;
 		philo->table = table;
 		philo->left_fork = table->forks + i;
 		philo->right_fork = table->forks + i + 1;
@@ -41,11 +41,22 @@ void	create_philo(t_table *table)
 	philo->right_fork = table->forks;
 }
 
+void	one_philo(t_philo *philo)
+{
+	print(philo, FORK);
+	print(philo, DEAD);
+}
+
 static void	*simulation(void *args)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)args;
+	if (philo->table->number_of_philos == 1)
+	{
+		one_philo(philo);
+		return (NULL);
+	}
 	if (philo->index % 2)
 		sleep_ms(2);
 	while (true)
@@ -66,7 +77,7 @@ static void	*simulation(void *args)
 int	start_simulation(t_table *table)
 {
 	pthread_t	end_thread;
-	int				i;
+	int			i;
 
 	i = -1;
 	table->start = current_time();

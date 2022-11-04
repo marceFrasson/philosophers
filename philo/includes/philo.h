@@ -6,7 +6,7 @@
 /*   By: mfrasson <mfrasson@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 12:12:07 by mfrasson          #+#    #+#             */
-/*   Updated: 2022/11/04 01:05:45 by mfrasson         ###   ########.fr       */
+/*   Updated: 2022/11/04 01:52:27 by mfrasson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ typedef struct s_table	t_table;
 typedef struct s_philo
 {
 	int							index;
-	t_table					*table;
-	pthread_t				thread;
-	pthread_mutex_t	*left_fork;
-	pthread_mutex_t	*right_fork;
-	long int				last_meal;
+	t_table						*table;
+	pthread_t					thread;
+	pthread_mutex_t				*left_fork;
+	pthread_mutex_t				*right_fork;
+	long int					last_meal;
 	int							times_eaten;
 }							t_philo;
 
@@ -48,12 +48,12 @@ typedef struct s_table
 	int							time_to_sleep;
 	int							times_a_philo_must_eat;
 	int							deaths;
-	long int				start;
+	long int					start;
 	int							stop;
-	t_philo					*philos;
-	pthread_mutex_t	*forks;
-	pthread_mutex_t *printing;
-	pthread_mutex_t *eating;
+	t_philo						*philos;
+	pthread_mutex_t				*forks;
+	pthread_mutex_t				*printing;
+	pthread_mutex_t				*eating;
 }							t_table;
 
 /*
@@ -85,7 +85,7 @@ void			*continue_or_end(void *args);
 */
 
 int				ft_atoi(const char *str);
-long int	current_time(void);
+long int		current_time(void);
 void			sleep_ms(int time);
 void			print(t_philo *philo, int action);
 

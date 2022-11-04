@@ -6,7 +6,7 @@
 /*   By: mfrasson <mfrasson@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 12:12:07 by mfrasson          #+#    #+#             */
-/*   Updated: 2022/11/04 01:16:42 by mfrasson         ###   ########.fr       */
+/*   Updated: 2022/11/04 01:46:48 by mfrasson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ static int	time_to_stop(t_table *table)
 	{
 		pthread_mutex_lock(table->eating);
 		if (table->times_a_philo_must_eat >= 0
-			&& (table->philos + i)->times_eaten >= table->times_a_philo_must_eat)
+			&& (table->philos + i)->times_eaten
+			>= table->times_a_philo_must_eat)
 		{
 			table->stop++;
 			pthread_mutex_unlock(table->eating);
@@ -42,7 +43,8 @@ static int	time_to_die(t_table *table)
 		pthread_mutex_lock(table->eating);
 		if (!(table->philos + i)->last_meal)
 			(table->philos + i)->last_meal = table->start;
-		if (current_time() - (table->philos + i)->last_meal > table->time_to_die)
+		if (current_time() - (table->philos + i)->last_meal
+			> table->time_to_die)
 		{
 			print(table->philos + i, DEAD);
 			pthread_mutex_unlock(table->eating);
