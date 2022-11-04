@@ -6,7 +6,7 @@
 /*   By: mfrasson <mfrasson@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 12:12:07 by mfrasson          #+#    #+#             */
-/*   Updated: 2022/11/01 23:28:44 by mfrasson         ###   ########.fr       */
+/*   Updated: 2022/11/04 01:13:55 by mfrasson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,8 @@ void	init_mutexes(t_table *table)
 	i = -1;
 	while (++i < table->number_of_philos)
 		pthread_mutex_init(table->forks + i, NULL);
-	pthread_mutex_init(table->print, NULL);
-	pthread_mutex_init(table->die, NULL);
-	// pthread_mutex_init(table->eat, NULL);
+	pthread_mutex_init(table->printing, NULL);
+	pthread_mutex_init(table->eating, NULL);
 }
 
 void	create_philo(t_table *table)
@@ -47,7 +46,6 @@ static void	*simulation(void *args)
 	t_philo	*philo;
 
 	philo = (t_philo *)args;
-	philo->last_meal = philo->table->start;
 	if (philo->index % 2)
 		sleep_ms(2);
 	while (true)

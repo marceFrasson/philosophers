@@ -6,7 +6,7 @@
 /*   By: mfrasson <mfrasson@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 12:12:07 by mfrasson          #+#    #+#             */
-/*   Updated: 2022/11/01 23:15:22 by mfrasson         ###   ########.fr       */
+/*   Updated: 2022/11/04 01:13:03 by mfrasson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,11 @@ void	take_forks(t_philo *philo)
 void	eat(t_philo *philo)
 {
 	print(philo, EAT);
+	pthread_mutex_lock(philo->table->eating);
 	philo->last_meal = current_time();
-	sleep_ms(philo->table->time_to_eat);
 	philo->times_eaten++;
+	pthread_mutex_unlock(philo->table->eating);
+	sleep_ms(philo->table->time_to_eat);
 }
 
 void	drop_forks(t_philo *philo)

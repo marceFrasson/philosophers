@@ -6,7 +6,7 @@
 /*   By: mfrasson <mfrasson@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 12:12:07 by mfrasson          #+#    #+#             */
-/*   Updated: 2022/11/01 23:27:26 by mfrasson         ###   ########.fr       */
+/*   Updated: 2022/11/04 01:16:42 by mfrasson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,39 +14,41 @@
 
 static int	time_to_stop(t_table *table)
 {
-	t_philo	philo;
 	int			i;
 
 	i = -1;
 	while (++i < table->number_of_philos)
 	{
-		philo = table->philos[i];
-		if (philo.table->times_a_philo_must_eat >= 0
-			&& philo.times_eaten >= philo.table->times_a_philo_must_eat)
+		pthread_mutex_lock(table->eating);
+		if (table->times_a_philo_must_eat >= 0
+			&& (table->philos + i)->times_eaten >= table->times_a_philo_must_eat)
 		{
-			philo.table->stop++;
+			table->stop++;
+			pthread_mutex_unlock(table->eating);
 			return (1);
 		}
+		pthread_mutex_unlock(table->eating);
 	}
 	return (0);
 }
 
 static int	time_to_die(t_table *table)
 {
-	t_philo	*philo;
 	int			i;
 
 	i = -1;
 	while (++i < table->number_of_philos)
 	{
-		philo = table->philos + i;
-		if (current_time() - philo->last_meal > philo->table->time_to_die)
+		pthread_mutex_lock(table->eating);
+		if (!(table->philos + i)->last_meal)
+			(table->philos + i)->last_meal = table->start;
+		if (current_time() - (table->philos + i)->last_meal > table->time_to_die)
 		{
-			pthread_mutex_lock(table->die);
-			print(philo, DEAD);
-			pthread_mutex_unlock(table->die);
+			print(table->philos + i, DEAD);
+			pthread_mutex_unlock(table->eating);
 			return (1);
 		}
+		pthread_mutex_unlock(table->eating);
 	}
 	return (0);
 }

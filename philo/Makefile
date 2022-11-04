@@ -6,7 +6,7 @@
 #    By: mfrasson <mfrasson@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/31 18:38:37 by mfrasson          #+#    #+#              #
-#    Updated: 2022/11/01 22:35:08 by mfrasson         ###   ########.fr        #
+#    Updated: 2022/11/04 01:17:09 by mfrasson         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,9 +28,7 @@ vpath %.h $(INCD_DIR)
 
 NAME	=	philo
 
-CFLAGS	=	-Wall -Wextra -Werror -g3 
-
-#-fsanitize=thread
+CFLAGS	=	-Wall -Wextra -Werror -g3 #-fsanitize=thread
 
 FLAGS	=	-pthread
 

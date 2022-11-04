@@ -6,7 +6,7 @@
 /*   By: mfrasson <mfrasson@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 12:12:07 by mfrasson          #+#    #+#             */
-/*   Updated: 2022/11/01 21:32:20 by mfrasson         ###   ########.fr       */
+/*   Updated: 2022/11/04 01:05:45 by mfrasson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,8 @@ typedef struct s_table
 	int							stop;
 	t_philo					*philos;
 	pthread_mutex_t	*forks;
-	pthread_mutex_t *print;
-	pthread_mutex_t *die;
-	pthread_mutex_t	*eat;
-	pthread_mutex_t	*get;
-	pthread_mutex_t	*set;
+	pthread_mutex_t *printing;
+	pthread_mutex_t *eating;
 }							t_table;
 
 /*

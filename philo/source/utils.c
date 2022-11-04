@@ -6,7 +6,7 @@
 /*   By: mfrasson <mfrasson@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 12:12:07 by mfrasson          #+#    #+#             */
-/*   Updated: 2022/11/01 19:44:18 by mfrasson         ###   ########.fr       */
+/*   Updated: 2022/11/04 01:10:42 by mfrasson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	sleep_ms(int time)
 
 void	print(t_philo *philo, int action)
 {
-	pthread_mutex_lock(philo->table->print);
+	pthread_mutex_lock(philo->table->printing);
 	if (!philo->table->deaths)
 	{
 		if (action == FORK)
@@ -75,5 +75,5 @@ void	print(t_philo *philo, int action)
 			philo->table->deaths++;
 		}
 	}
-	pthread_mutex_unlock(philo->table->print);
+	pthread_mutex_unlock(philo->table->printing);
 }
